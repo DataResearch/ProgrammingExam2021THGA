@@ -1,46 +1,38 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <gtk/gtk.h>
-#include "helper.h"
 
 static GtkWidget *number1;
 static GtkWidget *number2;
 static GtkWidget *result;
+static GtkWidget *radio1;
+static GtkWidget *radio2;
 
 void do_calculate(GtkWidget *calculate, gpointer data) {
     int num1 = atoi((char *)gtk_entry_get_text(GTK_ENTRY(number1)));
     int num2 = atoi((char *)gtk_entry_get_text(GTK_ENTRY(number2)));
 
     char buffer[32];
-    snprintf(buffer, sizeof(buffer), "result: %d", num1 + num2);
 
-    gtk_label_set_text(GTK_LABEL(result), buffer);
-}
-
-void do_calculate_2(GtkWidget *calculate, gpointer data) {
-    int num1 = atoi((char *)gtk_entry_get_text(GTK_ENTRY(number1)));
-    int num2 = atoi((char *)gtk_entry_get_text(GTK_ENTRY(number2)));
-
-    char buffer[32];
-    snprintf(buffer, sizeof(buffer), "result: %d", num1 - num2);
-
-    gtk_label_set_text(GTK_LABEL(result), buffer);
-}
-
-void do_quersumme(GtkWidget *qs, gpointer data) {
-    int num1 = atoi((char*)gtk_entry_get_text(GTK_ENTRY(number1)));
-    int num2 = atoi((char*)gtk_entry_get_text(GTK_ENTRY(number2)));
-
-    char buffer[32];
-    snprintf(buffer, sizeof(buffer), "result: %i",
-    quersumme_der_summe(num1, num2));
+    // TODO: operation for the result
+    // addition button selected?
+    int enable = 0;
+    if (enable = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radio1))) {
+        snprintf(buffer, sizeof(buffer), "result: %d", num1 + num2);
+    }
+    else if (enable = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radio2))) {
+        snprintf(buffer, sizeof(buffer), "result: %d", num1 - num2);
+    }
+    else {
+        snprintf(buffer, sizeof(buffer), "result: %d", 0);
+    }
 
     gtk_label_set_text(GTK_LABEL(result), buffer);
 }
 
 // gcc 007_gtk.c -o 007_gtk `pkg-config --cflags gtk+-3.0` `pkg-config --libs gtk+-3.0`
 int main(int argc, char **argv) {
-    GtkWidget *window, *grid, *calculate, *calculate2, *qs;
+    GtkWidget *window, *grid, *calculate;
     gtk_init(&argc, &argv);
 
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -59,17 +51,19 @@ int main(int argc, char **argv) {
     g_signal_connect(calculate, "clicked", G_CALLBACK(do_calculate), NULL);
     gtk_grid_attach(GTK_GRID(grid), calculate, 2, 0, 1, 1);
 
-    calculate2 = gtk_button_new_with_label("calculatos numero 2");
-    g_signal_connect(calculate, "clicked", G_CALLBACK(do_calculate_2), NULL);
-    gtk_grid_attach(GTK_GRID(grid), calculate, 3, 0, 1, 1);
-
-    qs = gtk_button_new_with_label("quersumme_der_summe");
-    g_signal_connect(qs, "clicked",
-    G_CALLBACK(do_quersumme),NULL);
-    gtk_grid_attach(GTK_GRID(grid), qs, 4, 0, 1, 1);
-
     result = gtk_label_new("result:");
-    gtk_grid_attach(GTK_GRID(grid), result, 5, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), result, 3, 0, 1, 1);
+
+    // create radio buttons
+    radio1 = gtk_radio_button_new_with_label_from_widget (
+        NULL,
+        "Addition");
+    gtk_grid_attach(GTK_GRID(grid), radio1, 0, 1, 1, 1);
+
+    radio2 = gtk_radio_button_new_with_label_from_widget (
+        GTK_RADIO_BUTTON (radio1),
+        "Subtract");
+    gtk_grid_attach(GTK_GRID(grid), radio2, 0, 2, 1, 1);
 
     gtk_widget_show_all(window);
     gtk_main();
