@@ -40,7 +40,7 @@ void do_quersumme(GtkWidget *qs, gpointer data) {
 
 // gcc 007_gtk.c -o 007_gtk `pkg-config --cflags gtk+-3.0` `pkg-config --libs gtk+-3.0`
 int main(int argc, char **argv) {
-    GtkWidget *window, *grid, *calculate, *qs;
+    GtkWidget *window, *grid, *calculate, *calculate2, *qs;
     gtk_init(&argc, &argv);
 
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
     g_signal_connect(calculate, "clicked", G_CALLBACK(do_calculate), NULL);
     gtk_grid_attach(GTK_GRID(grid), calculate, 2, 0, 1, 1);
 
-    calculate = gtk_button_new_with_label("calculatos numero 2");
+    calculate2 = gtk_button_new_with_label("calculatos numero 2");
     g_signal_connect(calculate, "clicked", G_CALLBACK(do_calculate_2), NULL);
     gtk_grid_attach(GTK_GRID(grid), calculate, 3, 0, 1, 1);
 
